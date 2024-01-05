@@ -7,7 +7,7 @@ import binascii
 class Parser:
     def __init__(self, dbc):
         self.format = None
-        self.plot = Decoder(dbc)
+        self.decoder = Decoder(dbc)
         self.timestamp = Timestamp()
         self.define_mask()
         self.parse_dump()
@@ -49,5 +49,7 @@ class Parser:
             match = self.find_mask(line)
             raw_timestamp, frame_id, data = self.match_unpack(match)
             timestamp = self.timestamp.duration(raw_timestamp)
-            self.plot.add_msg(timestamp, frame_id, data)
-        self.plot.plot()
+            self.decoder.add_msg(timestamp, frame_id, data)
+        self.decoder.data.convert_to_json()
+        self.decoder.data.convert_to_csv()
+

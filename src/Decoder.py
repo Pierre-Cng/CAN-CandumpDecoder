@@ -1,6 +1,5 @@
 import cantools 
 from Data import Data
-from matplotlib import pyplot as plt 
 
 class Decoder:
     def __init__(self, dbc):
@@ -20,7 +19,3 @@ class Decoder:
             y = decoded_signals[signal]
             signal = message.name + '.' + signal
             self.data.add_value(signal, x, y)
-
-    def plot(self):
-        self.data.plot()
-        plt.show()
