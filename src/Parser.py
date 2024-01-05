@@ -52,4 +52,3 @@ class Parser:
             self.decoder.add_msg(timestamp, frame_id, data)
         self.decoder.data.convert_to_json()
         self.decoder.data.convert_to_csv()
-
