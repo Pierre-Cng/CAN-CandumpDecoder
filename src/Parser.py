@@ -3,9 +3,13 @@ from Timestamp import Timestamp
 import re
 import sys 
 import binascii
+import signal 
 
 class Parser:
     def __init__(self, dbc):
+        self.cleanup_in_progress = False
+        signal.signal(signal.SIGTERM, self.cleanup_function)
+        signal.signal(signal.SIGINT, self.cleanup_function)
         self.format = None
         self.decoder = Decoder(dbc)
         self.timestamp = Timestamp()
@@ -37,18 +41,28 @@ class Parser:
         frame_id = int(match.group('frameid'), 16)
         data = binascii.unhexlify(match.group('data').replace(' ',''))
         return timestamp, frame_id, data
+    
+    def cleanup_function(self, signal, frame):
+        if not cleanup_in_progress:
+            cleanup_in_progress = True
+            self.decoder.data.convert_to_json()
+            self.decoder.data.convert_to_csv()
+            sys.exit(0)
 
     def parse_dump(self):
-        while True:
-            line = sys.stdin.readline()
-            if not line:
-                break
-            line = line.strip('\r\n')
-            if not line:
-                continue
-            match = self.find_mask(line)
-            raw_timestamp, frame_id, data = self.match_unpack(match)
-            timestamp = self.timestamp.duration(raw_timestamp)
-            self.decoder.add_msg(timestamp, frame_id, data)
-        self.decoder.data.convert_to_json()
-        self.decoder.data.convert_to_csv()
+        try:
+            while True:
+                line = sys.stdin.readline()
+                if not line:
+                    break
+                line = line.strip('\r\n')
+                if not line:
+                    continue
+                match = self.find_mask(line)
+                raw_timestamp, frame_id, data = self.match_unpack(match)
+                timestamp = self.timestamp.duration(raw_timestamp)
+                self.decoder.add_msg(timestamp, frame_id, data)
+        except KeyboardInterrupt:
+            pass
+        finally:
+            self.cleanup_function(None, None)
