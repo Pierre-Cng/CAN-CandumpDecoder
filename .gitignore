@@ -3,4 +3,5 @@ __pycache__/
 *.log
 *.json
 *.csv
+*.txt
 dbc/
