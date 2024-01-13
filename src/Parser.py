@@ -43,8 +43,8 @@ class Parser:
         return timestamp, frame_id, data
     
     def cleanup_function(self, signal, frame):
-        if not cleanup_in_progress:
-            cleanup_in_progress = True
+        if not self.cleanup_in_progress:
+            self.cleanup_in_progress = True
             self.decoder.data.convert_to_json()
             self.decoder.data.convert_to_csv()
             sys.exit(0)
