@@ -4,6 +4,7 @@ import re
 import sys 
 import binascii
 import signal 
+import datetime 
 
 class Parser:
     def __init__(self, dbc):
@@ -51,17 +52,20 @@ class Parser:
 
     def parse_dump(self):
         try:
-            while True:
-                line = sys.stdin.readline()
-                if not line:
-                    break
-                line = line.strip('\r\n')
-                if not line:
-                    continue
-                match = self.find_mask(line)
-                raw_timestamp, frame_id, data = self.match_unpack(match)
-                timestamp = self.timestamp.duration(raw_timestamp)
-                self.decoder.add_msg(timestamp, frame_id, data)
+            current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            with open(f'trace_can__{current_datetime}.txt', 'w') as trace:
+                while True:
+                    line = sys.stdin.readline()
+                    if not line:
+                        break
+                    trace.write(line)
+                    line = line.strip('\r\n')
+                    if not line:
+                        continue
+                    match = self.find_mask(line)
+                    raw_timestamp, frame_id, data = self.match_unpack(match)
+                    timestamp = self.timestamp.duration(raw_timestamp)
+                    self.decoder.add_msg(timestamp, frame_id, data)
         except KeyboardInterrupt:
             pass
         finally:
