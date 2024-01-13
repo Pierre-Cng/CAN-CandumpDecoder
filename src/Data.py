@@ -22,7 +22,7 @@ class Data:
             y_values = self.signals[signal]['y']
             master_df = master_df._append({'Signal': signal, 'x': x_values, 'y': y_values}, ignore_index=True)
         current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        master_df.to_csv(f'decoded_data__{current_datetime}.csv', index=False)
+        master_df.to_csv(f'cantrace_data__{current_datetime}.csv', index=False)
     
     def convert_to_json(self):
         current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
