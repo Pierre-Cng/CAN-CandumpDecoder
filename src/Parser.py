@@ -46,26 +46,24 @@ class Parser:
     def cleanup_function(self, signal, frame):
         if not self.cleanup_in_progress:
             self.cleanup_in_progress = True
+            self.decoder.data.save_raw_trace()
             self.decoder.data.convert_to_json()
             self.decoder.data.convert_to_csv()
             sys.exit(0)
 
     def parse_dump(self):
         try:
-            current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            with open(f'trace_can__{current_datetime}.txt', 'w') as trace:
-                while True:
-                    line = sys.stdin.readline()
-                    if not line:
-                        break
-                    trace.write(line)
-                    line = line.strip('\r\n')
-                    if not line:
-                        continue
-                    match = self.find_mask(line)
-                    raw_timestamp, frame_id, data = self.match_unpack(match)
-                    timestamp = self.timestamp.duration(raw_timestamp)
-                    self.decoder.add_msg(timestamp, frame_id, data)
+            while True:
+                line = sys.stdin.readline()
+                if not line:
+                    break
+                line = line.strip('\r\n')
+                if not line:
+                    continue
+                match = self.find_mask(line)
+                raw_timestamp, frame_id, data = self.match_unpack(match)
+                timestamp = self.timestamp.duration(raw_timestamp)
+                self.decoder.add_msg(timestamp, frame_id, data)
         except KeyboardInterrupt:
             pass
         finally:

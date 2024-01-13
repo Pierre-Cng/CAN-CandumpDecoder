@@ -4,6 +4,7 @@ from datetime import datetime
 
 class Data:
     def __init__(self):
+        self.raw_trace = []
         self.signals = {}
 
     def add_value(self, signal, x, y):
@@ -11,9 +12,18 @@ class Data:
             self.signals[signal] = {'name': signal, 'x':[], 'y':[]}
         self.signals[signal]['x'].append(x)
         self.signals[signal]['y'].append(y)
+    
+    def add_raw_trace(self, timestamp, frame_id, data):
+        self.add_raw_trace.append(f'{timestamp}, {frame_id}, {data}')
 
     def dict_obj_converter(self, obj):
-        return obj.__dict__ 
+        return obj.__dict__
+    
+    def save_raw_trace(self):
+        current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        with open(f'trace_can__{current_datetime}.txt', 'w') as trace:
+            for line in self.raw_trace:
+                trace.write(line)
     
     def convert_to_csv(self):
         master_df = pd.DataFrame(columns=['Signal', 'x', 'y'])  

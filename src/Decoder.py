@@ -8,6 +8,7 @@ class Decoder:
 
     def add_msg(self, timestamp, frame_id, data):
         try:
+            self.data.add_raw_trace(timestamp, frame_id, data)
             message = self.dbase.get_message_by_frame_id(frame_id)
             decoded_signals = message.decode(data, allow_truncated=True)            
         except Exception as e:
