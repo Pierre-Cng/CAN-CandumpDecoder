@@ -14,7 +14,7 @@ class Data:
         self.signals[signal]['y'].append(y)
     
     def add_raw_trace(self, timestamp, frame_id, data):
-        self.add_raw_trace.append(f'{timestamp}, {frame_id}, {data}')
+        self.raw_trace.append(f'{timestamp}, {frame_id}, {data}')
 
     def dict_obj_converter(self, obj):
         return obj.__dict__
