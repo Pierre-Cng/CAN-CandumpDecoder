@@ -23,7 +23,7 @@ class Data:
         current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         with open(f'trace_can__{current_datetime}.txt', 'w') as trace:
             for line in self.raw_trace:
-                trace.write(line)
+                trace.write(line + '\n')
     
     def convert_to_csv(self):
         master_df = pd.DataFrame(columns=['Signal', 'x', 'y'])  
