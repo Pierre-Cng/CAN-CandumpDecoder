@@ -46,7 +46,6 @@ class Parser:
     def cleanup_function(self, signal, frame):
         if not self.cleanup_in_progress:
             self.cleanup_in_progress = True
-            self.decoder.data.tail.close()
             self.decoder.data.save_raw_trace()
             self.decoder.data.convert_to_json()
             self.decoder.data.convert_to_csv()

@@ -7,7 +7,6 @@ class Data:
         self.raw_trace = []
         self.signals = {}
         self.current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        self.tail = open(f'tail_can__{self.current_datetime}.txt', 'w')
 
     def add_value(self, signal, x, y):
         self.feed_tail(f'{signal}, {x}, {y}')
@@ -17,7 +16,8 @@ class Data:
         self.signals[signal]['y'].append(y)
     
     def feed_tail(self, string):
-        self.tail.write(string + '\n')
+        with open(f'tail_can__{self.current_datetime}.txt', 'a') as tail:
+            tail.write(string + '\n')
     
     def add_raw_trace(self, timestamp, frame_id, data):
         self.raw_trace.append(f'{timestamp}, {frame_id}, {data}')
