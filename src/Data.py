@@ -38,7 +38,7 @@ class Data:
             x_values = self.signals[signal]['x']
             y_values = self.signals[signal]['y']
             master_df = master_df._append({'Signal': signal, 'x': x_values, 'y': y_values}, ignore_index=True)
-        master_df.to_csv(f'decoded_data__{self.current_datetime}.csv', index=False)
+        master_df.to_csv(f'{self.hostname}__decoded_data__{self.current_datetime}.csv', index=False)
     
     def convert_to_json(self):
         with open(f'{self.hostname}__decoded_data__{self.current_datetime}.json', 'w') as json_file:
