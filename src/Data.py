@@ -1,12 +1,14 @@
 import pandas as pd 
 import json 
 from datetime import datetime
+import socket
 
 class Data:
     def __init__(self):
         self.raw_trace = []
         self.signals = {}
         self.current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        self.hostname = socket.gethostname()
 
     def add_value(self, signal, x, y):
         self.feed_tail(f'{signal}, {x}, {y}')
@@ -16,7 +18,7 @@ class Data:
         self.signals[signal]['y'].append(y)
     
     def feed_tail(self, string):
-        with open(f'tail_can__{self.current_datetime}.txt', 'a') as tail:
+        with open(f'{self.hostname}__tail_can__{self.current_datetime}.txt', 'a') as tail:
             tail.write(string + '\n')
     
     def add_raw_trace(self, timestamp, frame_id, data):
@@ -26,7 +28,7 @@ class Data:
         return obj.__dict__
     
     def save_raw_trace(self):
-        with open(f'trace_can__{self.current_datetime}.txt', 'w') as trace:
+        with open(f'{self.hostname}__trace_can__{self.current_datetime}.txt', 'w') as trace:
             for line in self.raw_trace:
                 trace.write(line + '\n')
     
@@ -39,5 +41,5 @@ class Data:
         master_df.to_csv(f'decoded_data__{self.current_datetime}.csv', index=False)
     
     def convert_to_json(self):
-        with open(f'decoded_data__{self.current_datetime}.json', 'w') as json_file:
+        with open(f'{self.hostname}__decoded_data__{self.current_datetime}.json', 'w') as json_file:
             json.dump(self.signals, json_file, default=self.dict_obj_converter, indent=4)
